@@ -1,0 +1,16 @@
+.DS_Store
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.virtual_documents/
+
+# 归档压缩包（正式材料在各课文件夹）
+_archive/*.zip
+
+# VitePress
+ebook/node_modules/
+ebook/docs/.vitepress/cache/
+ebook/docs/.vitepress/dist/
+ebook/docs/public/files/
+ebook/docs/lessons/
+ebook/docs/.vitepress/sidebar.generated.js

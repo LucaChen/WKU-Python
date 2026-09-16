@@ -1,0 +1,14 @@
+{
+  "name": "wku-python-ebook",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync": "python3 ../_tools/sync_ebook.py",
+    "dev": "npm run sync && vitepress dev docs --port 5173 --host",
+    "build": "npm run sync && vitepress build docs",
+    "preview": "vitepress preview docs --port 4173 --host"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.3"
+  }
+}
