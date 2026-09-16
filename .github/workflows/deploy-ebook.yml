@@ -30,7 +30,7 @@ jobs:
           cache: npm
           cache-dependency-path: ebook/package-lock.json
       - name: Enable Pages (GitHub Actions source)
-        uses: actions/github-script@v8.0.0
+        uses: actions/github-script@v9.0.0
         continue-on-error: true
         with:
           script: |
@@ -45,13 +45,23 @@ jobs:
             } catch (error) {
               if (error.status === 409) {
                 core.info("Pages 已启用")
-                return
+              } else {
+                core.warning(
+                  "无法自动打开 Pages：" + error.message +
+                  "。请打开 https://github.com/" + owner + "/" + repo +
+                  "/settings/pages ，将 Source 设为 GitHub Actions，然后重新 Run workflow。"
+                )
               }
-              core.warning(
-                "无法自动打开 Pages：" + error.message +
-                "。请打开 https://github.com/" + owner + "/" + repo +
-                "/settings/pages ，将 Source 设为 GitHub Actions，然后重新 Run workflow。"
-              )
+            }
+            // 固定发布到 https://<user>.github.io/<repo>/，不要跟个人站自定义域名走
+            try {
+              await github.rest.repos.updateInformationAboutPagesSite({
+                owner,
+                repo,
+                https_enforced: true,
+              })
+            } catch (error) {
+              core.warning("无法更新 Pages HTTPS：" + error.message)
             }
       - name: Configure Pages
         uses: actions/configure-pages@v6.0.0
@@ -62,6 +72,9 @@ jobs:
         run: |
           npm ci
           npm run build
+          # GitHub 个人站若曾绑定自定义域名，configure-pages 可能写入 CNAME，
+          # 导致 github.io 永久 301 到该域名。本课站点只走 github.io。
+          rm -f docs/.vitepress/dist/CNAME
       - uses: actions/upload-pages-artifact@v5.0.0
         with:
           path: ebook/docs/.vitepress/dist
