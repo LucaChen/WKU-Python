@@ -20,22 +20,49 @@ jobs:
     env:
       EBOOK_BASE: /WKU-Python/
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
         with:
-          python-version: "3.11"
-      - uses: actions/setup-node@v4
+          python-version: "3.12"
+      - uses: actions/setup-node@v7.0.0
         with:
-          node-version: "22"
+          node-version: "24"
           cache: npm
           cache-dependency-path: ebook/package-lock.json
+      - name: Enable Pages (GitHub Actions source)
+        uses: actions/github-script@v8.0.0
+        continue-on-error: true
+        with:
+          script: |
+            const { owner, repo } = context.repo
+            try {
+              await github.rest.repos.createPagesSite({
+                owner,
+                repo,
+                build_type: "workflow",
+              })
+              core.info("已创建 GitHub Pages 站点（source = GitHub Actions）")
+            } catch (error) {
+              if (error.status === 409) {
+                core.info("Pages 已启用")
+                return
+              }
+              core.warning(
+                "无法自动打开 Pages：" + error.message +
+                "。请打开 https://github.com/" + owner + "/" + repo +
+                "/settings/pages ，将 Source 设为 GitHub Actions，然后重新 Run workflow。"
+              )
+            }
+      - name: Configure Pages
+        uses: actions/configure-pages@v6.0.0
+        with:
+          enablement: true
       - name: Sync notebooks and build VitePress
         working-directory: ebook
         run: |
           npm ci
           npm run build
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5.0.0
         with:
           path: ebook/docs/.vitepress/dist
 
@@ -47,4 +74,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5.0.1
