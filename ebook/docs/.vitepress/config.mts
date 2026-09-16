@@ -1,10 +1,14 @@
 import { defineConfig } from 'vitepress'
 import { sidebar } from './sidebar.generated.js'
 
+const rawBase = process.env.EBOOK_BASE || '/'
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`
+
 export default defineConfig({
   lang: 'zh-CN',
   title: 'WKU Python 实践课',
   description: '数据分析入门与 Agent 实训电子书：在线阅读讲义，下载 Jupyter 动手做。',
+  base,
   lastUpdated: true,
   cleanUrls: true,
   ignoreDeadLinks: true,
@@ -12,7 +16,7 @@ export default defineConfig({
     lineNumbers: true,
   },
   head: [
-    ['link', { rel: 'icon', href: '/favicon.svg' }],
+    ['link', { rel: 'icon', href: `${base}favicon.svg` }],
   ],
   themeConfig: {
     logo: '/favicon.svg',

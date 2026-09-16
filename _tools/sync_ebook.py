@@ -3,10 +3,24 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import shutil
 import zipfile
 from pathlib import Path
+
+
+def site_base() -> str:
+    raw = os.environ.get("EBOOK_BASE", "/")
+    if not raw.startswith("/"):
+        raw = "/" + raw
+    if not raw.endswith("/"):
+        raw += "/"
+    return raw
+
+
+def href(path: str) -> str:
+    return site_base() + path.lstrip("/")
 
 ROOT = Path(__file__).resolve().parents[1]
 EBOOK = ROOT / "ebook"
@@ -213,16 +227,17 @@ def download_buttons(slug: str, lectures, homework, extras) -> str:
     lines = ['<div class="dl-row">']
     for path in lectures:
         lines.append(
-            '<a class="dl-btn" href="/files/%s/%s" download>下载讲义 · %s</a>'
-            % (slug, path.name, path.name)
+            '<a class="dl-btn" href="%s" download>下载讲义 · %s</a>'
+            % (href("files/%s/%s" % (slug, path.name)), path.name)
         )
     for path in homework:
         lines.append(
-            '<a class="dl-btn brand" href="/files/%s/%s" download>下载课后练习 · %s</a>'
-            % (slug, path.name, path.name)
+            '<a class="dl-btn brand" href="%s" download>下载课后练习 · %s</a>'
+            % (href("files/%s/%s" % (slug, path.name)), path.name)
         )
     lines.append(
-        '<a class="dl-btn ghost" href="/files/%s/lesson.zip" download>下载本课材料包 zip</a>' % slug
+        '<a class="dl-btn ghost" href="%s" download>下载本课材料包 zip</a>'
+        % href("files/%s/lesson.zip" % slug)
     )
     lines.append("</div>")
     if extras:

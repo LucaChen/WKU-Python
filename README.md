@@ -4,7 +4,8 @@ GitHub：[LucaChen/WKU-Python](https://github.com/LucaChen/WKU-Python)
 
 本目录是开课用的 **12 节 Python 数据分析课**，外加 **8 节 Agent 实训课**（第13–20课）。每一课一个文件夹，内含实验说明、教案、数据、可运行实验。
 
-- 电子书（在线阅读 + 下载 Jupyter）：[`ebook/`](ebook/README.md)，在该目录执行 `npm install && npm run dev`
+- 电子书（在线阅读 + 下载 Jupyter）：[`ebook/`](ebook/README.md)，本地 `cd ebook && npm install && npm run dev`
+- GitHub Pages：https://lucachen.github.io/WKU-Python/ （需在仓库 Settings → Pages 将 Source 设为 GitHub Actions）
 - 每课要教的知识点：[`教学内容大纲.md`](教学内容大纲.md)（第13–20课见 [`教学内容大纲-Agent.md`](教学内容大纲-Agent.md)）
 - 学期安排与验收口径：[`12节课课程安排.md`](12节课课程安排.md)（Agent 模块见 [`后续Agent课程安排.md`](后续Agent课程安排.md)）
 - 内部生成脚本：[`_tools/`](_tools/README.md)（不要改各课文件夹路径）
